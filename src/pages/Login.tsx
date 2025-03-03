@@ -40,27 +40,27 @@ const Login = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100 w-[100vw]">
             <Card className="w-full max-w-sm shadow-lg">
                 <CardHeader>
-                    <CardTitle className="text-center text-2xl font-bold">Login</CardTitle>
+                    <CardTitle className="text-center text-2xl font-bold">Sign In</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">Username*</Label>
                             <Input
                                 id="email"
-                                type="email"
-                                placeholder="Enter your email"
+                                type="text"
+                                placeholder="Username"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
                         </div>
                         <div>
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">Password*</Label>
                             <Input
                                 id="password"
                                 type="password"
-                                placeholder="Enter your password"
+                                placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
