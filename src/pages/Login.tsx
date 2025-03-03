@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { adminLogin } from "@/services/AuthServices";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -13,35 +14,21 @@ const Login = () => {
 
     const handleLogin = async () => {
         if (email === "admin@gmail.com" && password === "admin") {
-            const response = await fetch("http://localhost:3000/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ login_name: email, password }),
-            })
-            const data: any = await response.json();
-            const { token, statusCode, message = "" } = data;
+            const response: any = await adminLogin({ login_name: email, password }, "login");
+            const { token, statusCode, message = "" } = response;
             if (statusCode === 200) {
                 localStorage.setItem("authToken", token);
-                localStorage.setItem("userData", JSON.stringify(data));
+                localStorage.setItem("userData", JSON.stringify(response));
                 navigate("/roles");
             } else {
                 setError(message);
             }
         } else {
-            const response = await fetch("http://localhost:3000/api/auth/login-by-role", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ login_name: email, password }),
-            })
-            const data: any = await response.json();
-            const { token, statusCode, message = "" } = data;
+            const response: any = await await adminLogin({ login_name: email, password }, "login-by-role");
+            const { token, statusCode, message = "" } = response;
             if (statusCode === 200) {
                 localStorage.setItem("authToken", token);
-                localStorage.setItem("userData", JSON.stringify(data));
+                localStorage.setItem("userData", JSON.stringify(response));
                 navigate("/trained-data");
             } else {
                 setError(message);
