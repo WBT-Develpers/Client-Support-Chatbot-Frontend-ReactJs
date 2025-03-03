@@ -1,0 +1,6 @@
+-- Super Admin
+  1.create roles.(Web dev , App dev , Client Support , WordPress dev)
+  2.create categories.
+  3.can delete and update the roles and categories.
+  4.can see the created and updated dates by the roles.
+

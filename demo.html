@@ -1,0 +1,275 @@
+<script>
+    // Configuration
+    const API_URL = 'https://onboarding.webuildtrades.com/chat';
+    const userId = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    let isProcessing = false;
+    let retryCount = 0;
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 1000; // 1 second
+
+    // Enhanced HTML sanitization
+    function sanitizeHTML(html) {
+        // Create a DOMParser to safely parse HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const temp = doc.body;
+
+        // Remove potentially dangerous elements
+        const dangerous = ['script', 'style', 'link', 'meta', 'object', 'embed'];
+        dangerous.forEach(tag => {
+            const elements = temp.getElementsByTagName(tag);
+            while (elements[0]) elements[0].parentNode.removeChild(elements[0]);
+        });
+
+        // Sanitize iframes (only allow YouTube)
+        const iframes = temp.getElementsByTagName('iframe');
+        Array.from(iframes).forEach(iframe => {
+            const src = iframe.getAttribute('src');
+            if (
+                src &&
+                (
+                    src.match(/^https:\/\/(www\.)?youtube\.com\/(embed|watch)/) ||
+                    src.match(/^https:\/\/(www\.)?loom\.com\/embed\//)
+                )
+            ) {
+                // Ensure iframe has proper security attributes
+                iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
+                iframe.setAttribute('loading', 'lazy');
+            } else {
+                iframe.parentNode.removeChild(iframe);
+            }
+        });
+
+
+        // Sanitize links
+        const links = temp.getElementsByTagName('a');
+        Array.from(links).forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href || !href.match(/^https?:\/\//)) {
+                link.parentNode.removeChild(link);
+            } else {
+                // Add security attributes to links
+                link.setAttribute('rel', 'noopener noreferrer');
+                link.setAttribute('target', '_blank');
+            }
+        });
+
+        // Sanitize images
+        const images = temp.getElementsByTagName('img');
+        Array.from(images).forEach(img => {
+            const src = img.getAttribute('src');
+            if (!src || !src.match(/^https?:\/\//)) {
+                img.parentNode.removeChild(img);
+            } else {
+                img.setAttribute('loading', 'lazy');
+                img.setAttribute('referrerpolicy', 'no-referrer');
+            }
+        });
+
+        return temp.innerHTML;
+    }
+
+    // Enhanced message appending with error handling
+    function appendMessage(content, sender) {
+        try {
+            const messages = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+
+            const timestamp = document.createElement('div');
+            timestamp.className = 'message-timestamp';
+            timestamp.textContent = new Date().toLocaleTimeString();
+
+            if (sender === 'bot') {
+                let sanitizedContent = sanitizeHTML(content);
+                sanitizedContent = sanitizedContent.replace(
+                    /<iframe(.+?)<\/iframe>/g,
+                    '<div class="video-container"><iframe$1</iframe></div>'
+                );
+
+                messageContent.innerHTML = sanitizedContent;
+
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-btn';
+                copyButton.innerHTML = '<i class="fa-solid fa-copy"></i> Copy';
+                copyButton.onclick = () => copyToClipboard(content);
+                messageDiv.appendChild(copyButton);
+            } else {
+                messageContent.textContent = content;
+            }
+
+            messageDiv.insertBefore(timestamp, messageDiv.firstChild);
+            messageDiv.insertBefore(messageContent, messageDiv.firstChild);
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+
+            // GSAP animation: Make the message fade in and slide up
+            gsap.from(messageDiv, {
+                opacity: 0,
+                y: 100,  // Slide up from 30px below
+                duration: 0.5,  // Animation duration in seconds
+                ease: 'power3.out'  // Easing function
+            });
+        } catch (error) {
+            console.error('Error appending message:', error);
+            showError('Failed to display message');
+        }
+    }
+
+
+    // Enhanced message sending with retries and better error handling
+    async function sendMessage(retryAttempt = 0) {
+        if (isProcessing) return;
+
+        const userInput = document.getElementById('user-input');
+        const message = userInput.value.trim();
+        const sendButton = document.getElementById('send-button');
+
+        if (!message) return;
+
+        try {
+            isProcessing = true;
+            userInput.disabled = true;
+            sendButton.disabled = true;
+
+            appendMessage(message, 'user');
+            userInput.value = '';
+
+            const loadingIndicator = document.getElementById('loading');
+            loadingIndicator.style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+
+            const response = await fetch(`${API_URL}/api/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    message: message,
+                    userId: userId,
+                    timestamp: new Date().toISOString()
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `Server responded with ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.reply) {
+                appendMessage(data.reply, 'bot');
+                retryCount = 0; // Reset retry counter on success
+            } else {
+                throw new Error('Invalid response from server');
+            }
+
+        } catch (error) {
+            console.error('Send message error:', error);
+
+            if (retryAttempt < MAX_RETRIES) {
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryAttempt + 1)));
+                return sendMessage(retryAttempt + 1);
+            }
+
+            showError(`Failed to send message: ${error.message}`);
+        } finally {
+            isProcessing = false;
+            userInput.disabled = false;
+            sendButton.disabled = false;
+            document.getElementById('loading').style.display = 'none';
+
+            // Check if the user is on a desktop
+            const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+            if (isDesktop) {
+                userInput.focus(); // Only focus on desktops
+            }
+        }
+
+    }
+
+    // Enhanced clipboard functionality
+    async function copyToClipboard(text) {
+        try {
+            const cleanText = text.replace(/<[^>]*>/g, '').trim();
+            await navigator.clipboard.writeText(cleanText);
+            showNotification('Text copied successfully!');
+        } catch (err) {
+            console.error('Copy error:', err);
+            showError('Failed to copy text. Please try manually selecting and copying.');
+        }
+    }
+
+    // Enhanced notifications
+    function showNotification(message = 'Copied to clipboard!') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.style.display = 'block';
+        notification.classList.add('show');
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 300);
+        }, 2000);
+    }
+
+    // Enhanced error display
+    function showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        errorDiv.classList.add('show');
+
+        setTimeout(() => {
+            errorDiv.classList.remove('show');
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 300);
+        }, 5000);
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        userInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        // Auto-resize textarea
+        userInput.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Prevent pasting of HTML content
+        userInput.addEventListener('paste', function (e) {
+            e.preventDefault();
+            const text = e.clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
+        });
+    });
+
+    // Handle connection errors and offline status
+    window.addEventListener('online', () => {
+        showNotification('Connection restored');
+        document.getElementById('error-message').style.display = 'none';
+    });
+
+    window.addEventListener('offline', () => {
+        showError('You are offline. Please check your internet connection.');
+    });
+</script>
