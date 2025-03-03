@@ -141,8 +141,8 @@ const Roles = () => {
                                     {index + 1}
                                 </TableCell>
                                 <TableCell className="font-medium text-center border-r capitalize">{category?.name}</TableCell>
-                                <TableCell className="font-medium text-center border-r capitalize">
-                                    {category?.login_name.replaceAll('_', ' ')}
+                                <TableCell className="font-medium text-center border-r">
+                                    {category?.login_name}
                                 </TableCell>
                                 <TableCell className="font-medium text-center border-r capitalize">{category?.decrypted_password || category?.password}</TableCell>
                                 <TableCell>

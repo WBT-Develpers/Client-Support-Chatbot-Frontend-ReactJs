@@ -16,7 +16,7 @@ interface Category {
     _id: string;
     name: string;
 }
-
+const baseUrl = import.meta.env.VITE_BASE_URL;
 const TrainedData = () => {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
 
@@ -235,7 +235,7 @@ const TrainedData = () => {
                                             <TableCell className="font-medium text-center border-r text-sm ">
                                                 <a
                                                     className="text-black hover:text-indigo-300"
-                                                    href={doc?.file_url ? `http://localhost:3000${doc?.file_url}` : `${doc?.link_url}`}
+                                                    href={doc?.file_url ? `${baseUrl}${doc?.file_url}` : `${doc?.link_url}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                 >
