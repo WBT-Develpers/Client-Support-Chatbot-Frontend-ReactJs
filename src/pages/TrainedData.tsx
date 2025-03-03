@@ -10,6 +10,7 @@ import moment from 'moment';
 import { getTrainedData, toggleAnStatus } from '@/services/TrainedDataServices';
 import { getCategories } from '@/services/CategoryServices';
 import { Input } from '@/components/ui/input';
+import ClockLoader from "react-spinners/ClockLoader";
 
 interface Category {
     _id: string;
@@ -31,6 +32,7 @@ const TrainedData = () => {
     const [statusFilter, setStatusFilter] = useState<any>();
     const [categories, setCategories] = useState<Category[]>([]);
     const statusData = [{ label: 'Active', value: 'true' }, { label: 'Inactive', value: 'false' }];
+    const [pageLoader, setPageLoader] = useState<boolean>(false);
 
     const debouncedSetSearch = useCallback(
         debounce((value: string) => {
@@ -70,6 +72,7 @@ const TrainedData = () => {
 
     const fetchTrainedData = async (page: number) => {
         try {
+            setPageLoader(true);
             const response: any = await getTrainedData(categoryFilter, statusFilter, page, debouncedSearchTerm, userData);
             if (response?.statusCode === 200) {
                 setTrainedData(response?.documents);
@@ -77,9 +80,14 @@ const TrainedData = () => {
                 setCurrentPage(response?.currentPage);
                 setNextPage(response?.nextPage);
                 setPrevPage(response?.prevPage);
+                setPageLoader(false);
+            } else {
+                alert("Failed to fetch documents");
+                setPageLoader(false);
             }
         } catch (error) {
             console.error('Error fetching documents:', error);
+            setPageLoader(false);
         }
     };
 
@@ -177,6 +185,21 @@ const TrainedData = () => {
                 </div>
             </div>
 
+            {
+                pageLoader && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white rounded-lg shadow-lg p-6 w-[100%] max-w-lg">
+                            <div className="flex items-center justify-between mb-5">
+                                <h2 className="text-lg font-semibold">Fetching Data</h2>
+                                {/* <X className="cursor-pointer" onClick={() => setPageLoader(false)} color="black" /> */}
+                            </div>
+                            <div className="flex items-center justify-center">
+                                <ClockLoader color="#36d7b7" />
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
             <div className='h-[80vh]'>
                 <div className="rounded-md border overflow-auto">
                     <Table>

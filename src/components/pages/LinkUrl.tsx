@@ -1,6 +1,7 @@
 import { Button } from "../ui/button"
 import { Card, CardContent } from "../ui/card"
 import { Input } from "../ui/input"
+import ClockLoader from "react-spinners/ClockLoader";
 
 const LinkUrl = ({ link, setLink, handleSubmit, linkLoader }: any) => {
     return (
@@ -18,6 +19,15 @@ const LinkUrl = ({ link, setLink, handleSubmit, linkLoader }: any) => {
 
                 <Button onClick={handleSubmit} disabled={!link || linkLoader} className="bg-blue-600 hover:bg-blue-500 text-white mt-6">
                     {linkLoader ? "Training..." : " Train Link"}
+                    {linkLoader && (
+                        <ClockLoader
+                            color={'white'}
+                            loading={linkLoader}
+                            size={20}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                        />
+                    )}
                 </Button>
             </CardContent>
         </Card>

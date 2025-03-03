@@ -10,6 +10,7 @@ import { debounce } from 'lodash';
 import { getRoles } from '@/services/RoleService';
 import moment from 'moment';
 import { Input } from '@/components/ui/input';
+import ClockLoader from "react-spinners/ClockLoader";
 
 interface Category {
     _id: string;
@@ -34,6 +35,7 @@ const CategoriesTab: React.FC = () => {
     const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
+    const [pageLoader, setPageLoader] = useState<boolean>(false);
     const [limit] = useState<number>(10);
 
     const debouncedSetSearch = useCallback(
@@ -59,15 +61,19 @@ const CategoriesTab: React.FC = () => {
 
     const fetchCategories = async () => {
         try {
+            setPageLoader(true);
             const response: any = await getCategories(currentPage, limit, debouncedSearchTerm, selectedRoleId);
             if (response.statusCode === 200) {
                 setCategories(response.categories);
                 setTotalPages(response.totalPages);
+                setPageLoader(false);
             } else {
                 alert("Failed to fetch categories");
+                setPageLoader(false);
             }
         } catch (error) {
             console.error('Error fetching categories:', error);
+            setPageLoader(false);
         }
     };
 
@@ -175,6 +181,22 @@ const CategoriesTab: React.FC = () => {
                     </Button>
                 </div>
             </div>
+
+            {
+                pageLoader && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white rounded-lg shadow-lg p-6 w-[100%] max-w-lg">
+                            <div className="flex items-center justify-between mb-5">
+                                <h2 className="text-lg font-semibold">Fetching Data</h2>
+                                {/* <X className="cursor-pointer" onClick={() => setPageLoader(false)} color="black" /> */}
+                            </div>
+                            <div className="flex items-center justify-center">
+                                <ClockLoader color="#36d7b7" />
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
             <div className='h-[80vh] overflow-auto'>
                 <div className="rounded-md border">
                     <Table>

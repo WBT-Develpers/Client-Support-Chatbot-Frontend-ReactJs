@@ -46,8 +46,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ category }) => {
             }
 
             formData.append("category_id", category?._id || "");
-
-            const response = await fetch("http://192.168.29.134:3000/api/query/ask", {
+            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+            const baseUrl = import.meta.env.VITE_BASE_URL;
+            const response = await fetch(`${apiBaseUrl}/query/ask`, {
                 method: "POST",
                 body: formData
             });
@@ -59,7 +60,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ category }) => {
             const botMessage: Message = {
                 id: messages.length + 2,
                 text: data.response,
-                audio: data.audio_url ? `http://192.168.29.134:3000/${data.audio_url}` : undefined,
+                audio: data.audio_url ? `${baseUrl}/${data.audio_url}` : undefined,
                 isUser: false,
                 timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true, })
             };

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import ClockLoader from "react-spinners/ClockLoader";
 
 const FileUpload = ({ onUpload, fileLoader }: { onUpload: (file: File) => void, fileLoader: boolean }) => {
     const [file, setFile] = useState<File | null>(null);
@@ -77,6 +78,15 @@ const FileUpload = ({ onUpload, fileLoader }: { onUpload: (file: File) => void, 
                     </div>
                     <Button onClick={handleSubmit} disabled={!file || fileLoader} className="bg-blue-600 hover:bg-blue-500 text-white">
                         {fileLoader ? 'Training...' : "Train File"}
+                        {fileLoader && (
+                            <ClockLoader
+                                color={'white'}
+                                loading={fileLoader}
+                                size={20}
+                                aria-label="Loading Spinner"
+                                data-testid="loader"
+                            />
+                        )}
                     </Button>
                 </div>
             </CardContent>
