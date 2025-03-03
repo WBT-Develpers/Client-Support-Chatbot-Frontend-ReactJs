@@ -15,6 +15,7 @@ const Documents = () => {
     const [categoryId, setCategoryId] = useState<string | null>('all');
     const [activePdfs, setActivePdf] = useState<any>([]);
     const [link, setLink] = useState<string>('');
+    const [fileLoader, setFileLoader] = useState(false);
 
     useEffect(() => {
         fetchCategories();
@@ -54,6 +55,7 @@ const Documents = () => {
 
     const handleFileUpload = async (file: File) => {
         try {
+            setFileLoader(true);
             if (categoryId !== 'all') {
                 const formData = new FormData();
                 formData.append("pdf", file);
@@ -66,13 +68,16 @@ const Documents = () => {
                 });
                 const result = await response.json();
                 fetchActivePdfs();
+                setFileLoader(false);
                 console.log("File uploaded:", result);
             } else {
                 console.error("Category ID not provided");
+                setFileLoader(false);
                 alert("Category ID not provided");
             }
         } catch (error) {
             console.error("Error uploading file:", error);
+            setFileLoader(false);
         }
     };
 
@@ -147,7 +152,7 @@ const Documents = () => {
                     </div>
 
                     <CardContent className="space-y-10">
-                        <FileUpload onUpload={handleFileUpload} />
+                        <FileUpload onUpload={handleFileUpload} fileLoader={fileLoader} />
                         <LinkUrl link={link} setLink={setLink} handleSubmit={handleLinkUpload} />
                     </CardContent>
                 </Card>
