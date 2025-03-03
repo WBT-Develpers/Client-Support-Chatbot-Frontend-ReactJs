@@ -134,7 +134,7 @@ const TrainedData = () => {
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-slate-400" />
                         <Input
                             type="text"
-                            placeholder="Search categories..."
+                            placeholder="Search..."
                             className="pl-8 h-10 w-64 rounded-md border bg-white border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-200"
                             value={searchTerm}
                             onChange={handleSearch}
