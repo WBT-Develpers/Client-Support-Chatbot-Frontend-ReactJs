@@ -7,6 +7,7 @@ import AddRoleModal from "@/components/pages/AddRoleModal";
 import ConfirmationDialog from "@/components/pages/ConfirmationDialog";
 import { deleteAnRole, getRoles } from "@/services/RoleService";
 import { Input } from "@/components/ui/input";
+import PageLoader from "@/components/modal/PageLoader";
 
 interface Role {
     _id: string;
@@ -24,6 +25,7 @@ const Roles = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [pageLoader, setPageLoader] = useState<boolean>(false);
 
     const debouncedSetSearch = useCallback(
         debounce((value: string) => {
@@ -42,14 +44,18 @@ const Roles = () => {
 
     const fetchRoles = async () => {
         try {
+            setPageLoader(true);
             const response: any = await getRoles(debouncedSearchTerm);
             if (response.statusCode === 200) {
                 setRoles(response.roles);
+                setPageLoader(false);
             } else {
                 console.error("Failed to fetch roles");
+                setPageLoader(false);
             }
         } catch (error) {
             console.error("Error fetching roles:", error);
+            setPageLoader(false);
         }
     };
 
@@ -122,7 +128,11 @@ const Roles = () => {
                     Add Role
                 </Button>
             </div>
-
+            {
+                pageLoader && (
+                    <PageLoader />
+                )
+            }
             <div className="rounded-md border mt-10">
                 <Table>
                     <TableHeader>
@@ -134,7 +144,7 @@ const Roles = () => {
                             <TableHead className="font-semibold text-center capitalize">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody className="w-full">
                         {roles?.map((category: any, index: any) => (
                             <TableRow key={category._id}>
                                 <TableCell className="font-medium text-center border-r">
@@ -157,6 +167,7 @@ const Roles = () => {
                                 </TableCell>
                             </TableRow>
                         ))}
+
                     </TableBody>
                 </Table>
             </div>

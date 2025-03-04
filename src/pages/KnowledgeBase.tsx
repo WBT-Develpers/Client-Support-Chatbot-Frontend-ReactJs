@@ -1,3 +1,4 @@
+import PageLoader from "@/components/modal/PageLoader";
 import { Input } from "@/components/ui/input";
 import { getTrainedDataByCategoryId } from "@/services/TrainedDataServices";
 import { ChevronLeft, Search } from "lucide-react";
@@ -13,6 +14,7 @@ const KnowledgeBase = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [modules, setModules] = useState<any>([]);
     const [showAll, setShowAll] = useState(false);
+    const [pageLoader, setPageLoader] = useState<boolean>(false);
 
     useEffect(() => {
         getModules();
@@ -21,14 +23,18 @@ const KnowledgeBase = () => {
 
     const getModules = async () => {
         try {
+            setPageLoader(true);
             const response: any = await getTrainedDataByCategoryId(categoryId);
             if (response.statusCode === 200) {
                 setModules(response.documents);
+                setPageLoader(false);
             } else {
                 alert("Failed to fetch modules");
+                setPageLoader(false);
             }
         } catch (error) {
             console.log(error);
+            setPageLoader(false);
         }
     };
 
@@ -59,6 +65,11 @@ const KnowledgeBase = () => {
             </div>
 
             <div className="mt-10">
+                {
+                    pageLoader && (
+                        <PageLoader />
+                    )
+                }
                 <div className="flex flex-wrap justify-center">
                     {
                         modules?.length > 0 ?

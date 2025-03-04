@@ -4,6 +4,7 @@ import { ChevronLeft, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TbCategory2 } from "react-icons/tb";
+import PageLoader from "@/components/modal/PageLoader";
 
 interface Category {
     _id: string;
@@ -18,21 +19,27 @@ const HeplCategories = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [tempCategories, setTempCategories] = useState<Category[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [pageLoader, setPageLoader] = useState<boolean>(false);
 
     useEffect(() => {
         fetchCategories();
     }, [])
+
     const fetchCategories = async () => {
         try {
+            setPageLoader(true);
             const response: any = await getCategoriesByRoles(roleId || 'all');
             if (response.statusCode !== 200) {
+                setPageLoader(false);
                 alert("Failed to fetch categories");
             } else {
                 setCategories(response.categories);
                 setTempCategories(response.categories);
+                setPageLoader(false);
             }
         } catch (error: any) {
             alert(error.message);
+            setPageLoader(false);
         }
     }
 
@@ -78,7 +85,11 @@ const HeplCategories = () => {
                     }
                 </div>
             </div>
-
+            {
+                pageLoader && (
+                    <PageLoader />
+                )
+            }
             <div className="grid grid-cols-3 gap-10 mt-10 mx-28">
                 {
                     categories?.length > 0 ?

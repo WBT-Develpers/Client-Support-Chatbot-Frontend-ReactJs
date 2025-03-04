@@ -10,7 +10,7 @@ import moment from 'moment';
 import { getTrainedData, toggleAnStatus } from '@/services/TrainedDataServices';
 import { getCategories } from '@/services/CategoryServices';
 import { Input } from '@/components/ui/input';
-import ClockLoader from "react-spinners/ClockLoader";
+import PageLoader from '@/components/modal/PageLoader';
 
 interface Category {
     _id: string;
@@ -187,17 +187,7 @@ const TrainedData = () => {
 
             {
                 pageLoader && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white rounded-lg shadow-lg p-6 w-[100%] max-w-lg">
-                            <div className="flex items-center justify-between mb-5">
-                                <h2 className="text-lg font-semibold">Fetching Data</h2>
-                                {/* <X className="cursor-pointer" onClick={() => setPageLoader(false)} color="black" /> */}
-                            </div>
-                            <div className="flex items-center justify-center">
-                                <ClockLoader color="#36d7b7" />
-                            </div>
-                        </div>
-                    </div>
+                    <PageLoader />
                 )
             }
             <div className='h-[80vh]'>
@@ -220,7 +210,7 @@ const TrainedData = () => {
                                 trainedData?.length === 0 ? (
                                     <TableRow>
                                         <TableCell colSpan={9} className="h-24 text-center">
-                                            No data found.
+                                            No data available.
                                         </TableCell>
                                     </TableRow>
                                 )

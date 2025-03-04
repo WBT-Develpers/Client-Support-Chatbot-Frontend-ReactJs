@@ -25,7 +25,7 @@ const Layout = () => {
                 {
                     showChatbot && (
                         <div className='absolute bottom-[14%] left-[1%]'>
-                            <Chatbot category={{ _id: '' }} />
+                            <Chatbot category={{ _id: '' }} setIsVisible={setShowChatbot} />
                         </div>
                     )
                 }

@@ -1,3 +1,4 @@
+import PageLoader from "@/components/modal/PageLoader";
 import { Input } from "@/components/ui/input";
 import { getRoles } from "@/services/RoleService";
 import { Search, SquareChartGantt, X } from "lucide-react";
@@ -14,20 +15,25 @@ const HeplCenter = () => {
     const [roles, setRoles] = useState<Roles[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [tempRoles, setTempRoles] = useState<Roles[]>([]);
+    const [pageLoader, setPageLoader] = useState<boolean>(false);
 
     useEffect(() => {
         fetchRoles();
     }, [])
     const fetchRoles = async () => {
         try {
+            setPageLoader(true);
             const response: any = await getRoles();
             if (response.statusCode !== 200) {
                 alert("Failed to fetch roles");
+                setPageLoader(false);
             } else {
                 setRoles(response.roles);
                 setTempRoles(response.roles);
+                setPageLoader(false);
             }
         } catch (error: any) {
+            setPageLoader(false);
             alert(error.message);
         }
     }
@@ -69,6 +75,11 @@ const HeplCenter = () => {
                 </div>
             </div>
 
+            {
+                pageLoader && (
+                    <PageLoader />
+                )
+            }
             <div className="grid grid-cols-3 gap-10 mt-16 mx-28">
                 {
                     roles?.length > 0 ?
