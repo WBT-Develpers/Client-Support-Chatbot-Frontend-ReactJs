@@ -212,7 +212,6 @@ const TrainedData = () => {
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Role</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Trained by</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Trained on</TableHead>
-                                {/* <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Updated on</TableHead> */}
                                 <TableHead className="border-r font-semibold text-black text-center">Status</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -246,7 +245,6 @@ const TrainedData = () => {
                                             <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{doc?.role_name}</TableCell>
                                             <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{doc?.uploaded_by}</TableCell>
                                             <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{moment(doc?.metadata?.uploadDate).format('MMMM D, YYYY h:mm A')}</TableCell>
-                                            {/* <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{moment(doc?.updated_at).format('MMMM D, YYYY h:mm A')}</TableCell> */}
                                             <TableCell className="font-medium text-center border-r cursor-pointer">
                                                 <CustomSwitch checked={doc?.is_active} onChange={() => toggleStatus(doc._id, doc.is_active)} />
                                             </TableCell>
