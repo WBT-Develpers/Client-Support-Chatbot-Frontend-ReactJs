@@ -92,7 +92,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ category, setIsVisible }) => {
     return (
         <div className="w-[400px] h-[700px] max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
             <div className="flex items-center justify-between bg-blue-600 text-white p-3">
-                <img src="./public/chatbot.gif" alt="Logo" className="w-10 h-10 " />
+                <img src="/chatbot.gif" alt="Logo" className="w-10 h-10 " />
                 <div className="text-center font-bold text-xl">Chatbot</div>
                 <X className="cursor-pointer" onClick={() => setIsVisible(false)} />
             </div>
