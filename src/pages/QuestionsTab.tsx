@@ -113,13 +113,13 @@ const QuestionsTab = () => {
                         </SelectContent>
                     </Select>
                     <Button onClick={() => setIsAddModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold">
-                        <Plus className="mr-2 h-4 w-4" /> Add F&Q
+                        <Plus className="mr-2 h-4 w-4" /> Add Q&A
                     </Button>
                 </div>
             </div>
 
 
-            <div className="rounded-md border">
+            <div className="rounded-md border bg-white">
                 <Table>
                     <TableHeader>
                         <TableRow>

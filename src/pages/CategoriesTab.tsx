@@ -188,7 +188,7 @@ const CategoriesTab: React.FC = () => {
                 )
             }
             <div className='h-[80vh] overflow-auto'>
-                <div className="rounded-md border">
+                <div className="rounded-md border bg-white">
                     <Table>
                         <TableHeader>
                             <TableRow>

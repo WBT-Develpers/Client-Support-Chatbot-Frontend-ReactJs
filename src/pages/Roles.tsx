@@ -133,8 +133,8 @@ const Roles = () => {
                     <PageLoader />
                 )
             }
-            <div className="rounded-md border mt-10">
-                <Table>
+            <div className="rounded-md border mt-10 bg-white">
+                <Table className="">
                     <TableHeader>
                         <TableRow>
                             <TableHead className="border-r font-semibold text-center capitalize">S.NO.</TableHead>
@@ -144,7 +144,7 @@ const Roles = () => {
                             <TableHead className="font-semibold text-center capitalize">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody className="w-full">
+                    <TableBody className="w-full rounded-md">
                         {roles?.map((category: any, index: any) => (
                             <TableRow key={category._id}>
                                 <TableCell className="font-medium text-center border-r">

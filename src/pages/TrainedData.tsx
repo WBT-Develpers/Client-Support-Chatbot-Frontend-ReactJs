@@ -191,7 +191,7 @@ const TrainedData = () => {
                 )
             }
             <div className='h-[80vh]'>
-                <div className="rounded-md border overflow-auto">
+                <div className="rounded-md border overflow-auto bg-white">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -202,7 +202,7 @@ const TrainedData = () => {
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Role</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Trained by</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Trained on</TableHead>
-                                <TableHead className="border-r font-semibold text-black text-center">Status</TableHead>
+                                <TableHead className="font-semibold text-black text-center">Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -235,7 +235,7 @@ const TrainedData = () => {
                                             <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{doc?.role_name}</TableCell>
                                             <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{doc?.uploaded_by}</TableCell>
                                             <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{moment(doc?.metadata?.uploadDate).format('MMMM D, YYYY h:mm A')}</TableCell>
-                                            <TableCell className="font-medium text-center border-r cursor-pointer">
+                                            <TableCell className="font-medium text-center cursor-pointer">
                                                 <CustomSwitch checked={doc?.is_active} onChange={() => toggleStatus(doc._id, doc.is_active)} />
                                             </TableCell>
                                         </TableRow>
