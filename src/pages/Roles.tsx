@@ -65,11 +65,14 @@ const Roles = () => {
             if (response.statusCode === 200) {
                 setOpenDeleteModal(false);
                 fetchRoles();
+                setEditQuestion(null);
             } else {
                 alert("Failed to delete role");
+                setEditQuestion(null);
             }
         } catch (error) {
             console.error("Error deleting role:", error);
+            setEditQuestion(null);
         }
     };
 
@@ -81,6 +84,7 @@ const Roles = () => {
 
     const onCloseDeleteModal = () => {
         setOpenDeleteModal(false);
+        setEditQuestion(null);
         fetchRoles();
     };
 

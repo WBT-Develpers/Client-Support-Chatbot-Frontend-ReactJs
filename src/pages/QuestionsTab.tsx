@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Edit, Plus, Trash } from "lucide-react";
+import { Edit, Plus, Trash2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AddQuestionModal from "@/components/pages/AddQuestionModal";
 import ConfirmationDialog from "@/components/pages/ConfirmationDialog";
@@ -179,7 +179,7 @@ const QuestionsTab = () => {
                                                     <Edit className="h-4 w-4 text-red-500" />
                                                 </Button>
                                                 <Button onClick={() => { setDeleteQuestionId(category._id); setIsConfirmationOpen(true) }} variant="ghost" size="sm" className='bg-white'>
-                                                    <Trash className="h-4 w-4 text-red-500" />
+                                                    <Trash2 className="h-4 w-4 text-red-500" />
                                                 </Button>
                                             </div>
                                         </TableCell>

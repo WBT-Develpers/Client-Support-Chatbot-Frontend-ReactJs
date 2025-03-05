@@ -85,19 +85,15 @@ const Chatbot: React.FC<ChatbotProps> = ({ category, setIsVisible }) => {
     };
 
 
-    const handleSendClick = () => {
-        sendMessage();
-    };
-
     return (
-        <div className="w-[400px] h-[700px] max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+        <div className="w-[400px] h-[750px] max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
             <div className="flex items-center justify-between bg-blue-600 text-white p-3">
                 <img src="/chatbot.gif" alt="Logo" className="w-10 h-10 " />
                 <div className="text-center font-bold text-xl">Chatbot</div>
                 <X className="cursor-pointer" onClick={() => setIsVisible(false)} />
             </div>
 
-            <div className="p-4 h-[565px] overflow-y-auto space-y-5 bg-white">
+            <div className="p-4 h-[600px] overflow-y-auto space-y-5 bg-white">
                 {messages.map((msg) => (
                     <div key={msg.id} className={msg.isUser ? "text-right" : "text-left"}>
                         {(msg.text && !msg.audio) && (
@@ -120,19 +116,21 @@ const Chatbot: React.FC<ChatbotProps> = ({ category, setIsVisible }) => {
                 )}
             </div>
 
-            <div className="p-3 flex border-t shadow-2xl shadow-gray-400">
-                <input
-                    type="text"
+            <div className="p-3 flex items-center border-t shadow-gray-400">
+                <textarea
                     placeholder="Type a message..."
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white max-h-14"
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();  // Prevent adding a new line
+                            sendMessage();   // Call sendMessage
+                        }
+                    }}
                 />
-                {/* <button onClick={handleSendClick} className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700">
-                    Send
-                </button> */}
-                <div className="bg-blue-600 ml-2 text-white w-11 h-11 flex justify-center items-center rounded-full hover:bg-blue-700">
-                    <Send className="cursor-pointer" onClick={handleSendClick} color="white" />
+                <div onClick={() => sendMessage()} className="bg-blue-600 ml-2 text-white w-11 h-11 flex justify-center items-center rounded-full hover:bg-blue-700">
+                    <Send className="cursor-pointer" color="white" />
                 </div>
             </div>
         </div>

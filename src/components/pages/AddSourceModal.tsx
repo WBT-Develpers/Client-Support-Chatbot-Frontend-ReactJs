@@ -13,6 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import { getCategoriesByRoles } from '@/services/CategoryServices';
 import { getRoles } from '@/services/RoleService';
 import { categorizeAlltheDocuments, trainFiles, trainLinks } from '@/services/TrainedDataServices';
+import DataTrainedConfirmationModal from '../modal/DataTrainedConfirmationModal';
 
 interface AddSourcesModalProps {
     isOpen: boolean;
@@ -45,6 +46,7 @@ const AddSourceModal: React.FC<AddSourcesModalProps> = ({
     const [fileLoader, setFileLoader] = useState(false);
     const [roles, setRoles] = useState<Role[]>([]);
     const [roleId, setRoleId] = useState<string | null>(userData?.role === 'admin' ? 'all' : userData?._id || '');
+    const [confirmModal, setConfirmModal] = useState(false);
 
     useEffect(() => {
         if (roleId !== 'all') {
@@ -95,11 +97,13 @@ const AddSourceModal: React.FC<AddSourcesModalProps> = ({
                 if (response.statusCode === 200) {
                     const categorize: any = await categorizeAlltheDocuments(categoryId);
                     if (categorize.statusCode === 200) {
-                        toast({
-                            title: "Success",
-                            description: response.message,
-                            variant: "default",
-                        })
+                        // toast({
+                        //     title: "Success",
+                        //     description: response.message,
+                        //     variant: "default",
+                        // })
+                        // onClose();
+                        setConfirmModal(true);
                         setFileLoader(false);
                     } else {
                         toast({
@@ -142,12 +146,13 @@ const AddSourceModal: React.FC<AddSourcesModalProps> = ({
                     const categorize: any = await categorizeAlltheDocuments(categoryId);
                     if (categorize.statusCode === 200) {
                         setLinkLoader(false)
-                        toast({
-                            title: "Success",
-                            description: response.message,
-                            variant: "default",
-                        })
-                        console.log("Link uploaded:", response);
+                        // toast({
+                        //     title: "Success",
+                        //     description: response.message,
+                        //     variant: "default",
+                        // })
+                        // onClose();
+                        setConfirmModal(true);
                     } else {
                         setLinkLoader(false)
                         toast({
@@ -176,8 +181,23 @@ const AddSourceModal: React.FC<AddSourcesModalProps> = ({
     };
 
 
+    const onCloseConfirmModal = (value: string) => {
+        if (value === 'yes') {
+            setConfirmModal(false);
+        } else {
+            onClose();
+            setConfirmModal(false);
+        }
+    }
+
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
+            {
+                confirmModal && (
+                    <DataTrainedConfirmationModal isOpen={confirmModal} onClose={() => onCloseConfirmModal('no')} onContinue={() => onCloseConfirmModal('yes')} />
+                )
+            }
             <DialogContent className='min-w-[800px] bg-white p-10 text-black'>
                 <DialogHeader>
                     <DialogTitle className='text-black text-2xl'>{'Upload Source Documents'}</DialogTitle>

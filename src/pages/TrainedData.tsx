@@ -190,14 +190,14 @@ const TrainedData = () => {
                     <PageLoader />
                 )
             }
-            <div className='h-[80vh]'>
-                <div className="rounded-md border overflow-auto bg-white">
+            <div className='h-[80vh] overflow-auto'>
+                <div className="rounded-md border  bg-white">
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="border-r font-semibold text-black text-center">S.NO.</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Category Name</TableHead>
-                                <TableHead className="border-r font-semibold text-black text-center w-48">File Name</TableHead>
+                                <TableHead className="border-r font-semibold text-black text-center w-[30%]">File Name / Link</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Document Type</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Role</TableHead>
                                 <TableHead className="border-r font-semibold text-black text-center whitespace-nowrap">Trained by</TableHead>
@@ -220,8 +220,8 @@ const TrainedData = () => {
                                             <TableCell className="font-medium text-center border-r text-sm">
                                                 {(currentPage - 1) * 10 + index + 1}
                                             </TableCell>
-                                            <TableCell className="font-medium text-center border-r text-sm whitespace-nowrap">{doc?.category_name}</TableCell>
-                                            <TableCell className="font-medium text-center border-r text-sm ">
+                                            <TableCell className="font-medium text-center border-r text-sm whitespace-pre">{doc?.category_name}</TableCell>
+                                            <TableCell className="font-medium text-center border-r text-sm">
                                                 <a
                                                     className="text-black hover:text-indigo-300"
                                                     href={doc?.file_url ? `${baseUrl}${doc?.file_url}` : `${doc?.link_url}`}
@@ -248,9 +248,13 @@ const TrainedData = () => {
             {
                 totalPages > 1 && (
                     <div className="flex justify-end items-center space-x-4 pb-10">
-                        <Button onClick={() => handlePageChange(prevPage)} disabled={!prevPage}><ChevronLeft /></Button>
+                        <Button onClick={() => handlePageChange(prevPage)} disabled={!prevPage} className='bg-blue-500 hover:bg-blue-500 w-5 h-8'>
+                            <ChevronLeft />
+                        </Button>
                         <span>Page {currentPage} of {totalPages}</span>
-                        <Button onClick={() => handlePageChange(nextPage)} disabled={!nextPage}><ChevronRight /></Button>
+                        <Button onClick={() => handlePageChange(nextPage)} disabled={!nextPage} className='bg-blue-500 hover:bg-blue-500 w-5 h-8'>
+                            <ChevronRight />
+                        </Button>
                     </div>
                 )
             }

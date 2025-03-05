@@ -32,6 +32,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     const [description, setDescription] = useState(initialCategory?.description || '');
     const [roles, setRoles] = useState<Role[]>([]);
     const [roleId, setRoleId] = useState<string | null>(initialCategory ? initialCategory.role_id : 'all');
+    const [errorMessage, setErrorMessage] = useState({ roleId: '', category: '' });
 
     useEffect(() => {
         fetchRoles();
@@ -51,8 +52,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     };
 
     const handleSave = async () => {
-        if (!category) {
-            alert('Please enter a category name');
+        if (checkErrors()) {
             return;
         }
 
@@ -75,6 +75,22 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
         }
     };
 
+    const checkErrors = () => {
+        const errors: any = {};
+        if (roleId === 'all') {
+            errors.roleId = 'Please select a role';
+        }
+        if (!category) {
+            errors.category = 'Please enter a category name';
+        }
+        setErrorMessage(errors);
+        if (!roleId || !category) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
 
     return (
         <Dialog
@@ -94,13 +110,13 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="pt-4">
+                <div className="">
                     <Select value={roleId || ""} onValueChange={(value) => setRoleId(value || null)}>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className={`${errorMessage.roleId ? 'border-red-500' : ''}`}>
                             <SelectValue placeholder="Select Role" className='' />
                         </SelectTrigger>
                         <SelectContent className="">
-                            <SelectItem value="all" className="">All Roles</SelectItem>
+                            <SelectItem value="all" className="">Select Role</SelectItem>
                             {roles?.map((role) => (
                                 <SelectItem key={role._id} value={role._id} className="">
                                     {role.name}
@@ -108,23 +124,25 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
                             ))}
                         </SelectContent>
                     </Select>
+                    {errorMessage.roleId && <span className="text-red-500 text-sm ml-1">{errorMessage.roleId}</span>}
                 </div>
 
-                <div className="py-4">
+                <div className="">
                     <Input
                         type="text"
                         placeholder="Category Name"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="w-full"
+                        className={`${errorMessage.category ? 'border-red-500' : ''}`}
                     />
+                    {errorMessage.category && <span className="text-red-500 text-sm ml-1">{errorMessage.category}</span>}
                 </div>
-                <div className="pb-4">
+                <div className="">
                     <Textarea
                         placeholder="Description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full"
+                        className="w-full min-h-[180px]"
                     />
                 </div>
 

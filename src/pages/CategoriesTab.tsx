@@ -62,7 +62,7 @@ const CategoriesTab: React.FC = () => {
     const fetchCategories = async () => {
         try {
             setPageLoader(true);
-            const response: any = await getCategories(currentPage, limit, debouncedSearchTerm, selectedRoleId);
+            const response: any = await getCategories(currentPage, limit, debouncedSearchTerm, selectedRoleId != 'all_roles' ? selectedRoleId : null);
             if (response.statusCode === 200) {
                 setCategories(response.categories);
                 setTotalPages(response.totalPages);
@@ -163,10 +163,10 @@ const CategoriesTab: React.FC = () => {
                     <div className="">
                         <Select value={selectedRoleId || ''} onValueChange={(value) => setSelectedRoleId(value)}>
                             <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select status" />
+                                <SelectValue placeholder="Select role" />
                             </SelectTrigger>
                             <SelectContent className="">
-                                <SelectItem value="all_status" className="text-white">Select Role</SelectItem>
+                                <SelectItem value="all_roles" className="text-white">Select Role</SelectItem>
                                 {roles?.map((role: any) => (
                                     <SelectItem key={role._id} value={role._id} className="">
                                         {role.name}
@@ -261,11 +261,11 @@ const CategoriesTab: React.FC = () => {
             {
                 totalPages > 1 && (
                     <div className="flex justify-end items-center space-x-4 mt-4">
-                        <Button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)} className='bg-blue-500 hover:bg-blue-500'>
+                        <Button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)} className='bg-blue-500 hover:bg-blue-500 w-5 h-8'>
                             <ChevronLeft className="h-4 w-4" />
                         </Button>
                         <span>Page {currentPage} of {totalPages}</span>
-                        <Button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)} className='bg-blue-500 hover:bg-blue-500'>
+                        <Button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)} className='bg-blue-500 hover:bg-blue-500 w-5 h-8'>
                             <ChevronRight className="h-4 w-4" />
                         </Button>
                     </div>

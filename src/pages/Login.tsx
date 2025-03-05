@@ -53,6 +53,12 @@ const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleLogin();
+                                    }
+                                }}
                             />
                         </div>
                         <div>
@@ -64,6 +70,12 @@ const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleLogin();
+                                    }
+                                }}
                             />
                         </div>
                         {error && <p className="text-red-500 text-sm">{error}</p>}

@@ -71,8 +71,8 @@ const Sidebar = () => {
                     </div>
 
                     <div
-                        onClick={() => setShowLogoutModal(true)}  // <-- Open modal
-                        className="w-full flex items-center py-2 text-red-600 text-xl cursor-pointer"
+                        onClick={() => setShowLogoutModal(true)}
+                        className="w-full flex items-center py-2 text-red-600 text-xl cursor-pointer font-semibold ml-1"
                     >
                         <LogOut className="h-6 w-6" />
                         <span className='ml-2'>Logout</span>
