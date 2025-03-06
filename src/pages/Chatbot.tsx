@@ -97,7 +97,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ category, setIsVisible }) => {
                 {messages.map((msg) => (
                     <div key={msg.id} className={msg.isUser ? "text-right" : "text-left"}>
                         {(msg.text && !msg.audio) && (
-                            <div className={`inline-block px-3 py-2 text-sm rounded-lg ${msg.isUser ? "bg-green-100 text-green-800 max-w-[50%] text-left" : "bg-blue-100 text-blue-800 max-w-[80%]"}`}>
+                            <div className={`inline-block px-3 py-2 text-sm rounded-lg ${msg.isUser ? "bg-green-100 text-green-800 max-w-[80%] text-left" : "bg-blue-100 text-blue-800 max-w-[90%]"}`}>
                                 <ReactMarkdown>{msg.text || ''}</ReactMarkdown>
                             </div>
                         )}

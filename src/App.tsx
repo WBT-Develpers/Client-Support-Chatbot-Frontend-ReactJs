@@ -15,7 +15,7 @@ import DocumentSection from './pages/DocumentSection';
 const App = () => {
   return (
     <Router>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen antialiased">
         <Routes>
           <Route path="/" element={<Login />} />
 

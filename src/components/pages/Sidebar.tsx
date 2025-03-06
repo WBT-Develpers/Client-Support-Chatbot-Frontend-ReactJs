@@ -18,8 +18,8 @@ const Sidebar = () => {
             setMenuData([
                 { id: 'roles', icon: RollerCoaster, label: 'Roles', path: '/roles' },
                 { id: 'categories', icon: List, label: 'Categories', path: '/categories' },
-                { id: 'questions', icon: FileText, label: 'Questions', path: '/questions' },
                 { id: 'trained_data', icon: BarChart, label: 'Trained Data', path: '/trained-data' },
+                { id: 'questions', icon: FileText, label: 'Questions', path: '/questions' },
                 { id: 'help_center', icon: HelpCircle, label: 'Help Center', path: '/help-center' },
             ]);
         } else {
@@ -48,7 +48,7 @@ const Sidebar = () => {
                             to={path}
                             className={({ isActive }) =>
                                 `w-full flex items-center mb-2 px-4 py-2 rounded-md transition ${isActive
-                                    ? 'bg-blue-600 hover:bg-blue-500 text-white'
+                                    ? 'bg-[#0070F3] hover:bg-blue-500 text-white'
                                     : 'text-black hover:bg-blue-700 hover:text-white'
                                 }`
                             }

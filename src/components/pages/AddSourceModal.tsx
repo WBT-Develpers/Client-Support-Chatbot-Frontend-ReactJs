@@ -145,6 +145,7 @@ const AddSourceModal: React.FC<AddSourcesModalProps> = ({
                 if (response.statusCode === 200) {
                     const categorize: any = await categorizeAlltheDocuments(categoryId);
                     if (categorize.statusCode === 200) {
+                        setConfirmModal(true);
                         setLinkLoader(false)
                         // toast({
                         //     title: "Success",
@@ -152,7 +153,6 @@ const AddSourceModal: React.FC<AddSourcesModalProps> = ({
                         //     variant: "default",
                         // })
                         // onClose();
-                        setConfirmModal(true);
                     } else {
                         setLinkLoader(false)
                         toast({
